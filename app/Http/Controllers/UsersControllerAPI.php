@@ -51,6 +51,8 @@ class UsersControllerAPI extends Controller
 
     public function destroy($id)
     {
-        User::find($id)->delete();
+        $user = User::find($id);
+        Storage::delete('public/' . $user->image);
+        $user->delete();
     }
 }

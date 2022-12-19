@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Http\Requests\UserStoreRequest;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class UsersController extends Controller
 {
@@ -66,7 +67,9 @@ class UsersController extends Controller
     public function destroy()
     {
         session_start();
-        User::where('email', $_SESSION['user'])->first()->delete();
+        $user = User::where('email', $_SESSION['user'])->first();
+        Storage::delete('public/' . $user->image);
+        $user->delete();
         session_unset();
         session_destroy();
         return redirect()->route('login');
